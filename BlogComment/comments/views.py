@@ -9,17 +9,36 @@ from django.forms import model_to_dict
 
 class ArticleAPIView(APIView):
     def get(self, request):
-        lst = Article.objects.all().values()
-        return Response({'lst': lst})
+        art_list = Article.objects.all().values()
+        return Response({'posts': ArticleSerializer(art_list, many=True).data})
 
     def post(self, request):
-        post_new = Article.objects.create(
-            title=request.data['title'],
-            content=request.data['content']
-        )
-        return Response({'post': model_to_dict(post_new)})
+        serializer = ArticleSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+
+        return Response({'post': serializer.data})
+
+    def put(self, request, *args, **kwargs):
+        pk = kwargs.get("pk", None)
+        if not pk:
+            return Response({'error': 'Метод PUT не определен'})
+
+        try:
+            instance = Article.objects.get(pk=pk)
+        except:
+            return Response({'error': 'Объект не найден'})
+
+        serializer = ArticleSerializer(data=request.data, instance=instance)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response({'post': serializer.data})
 
 
-# class ArticleAPIView(generics.ListAPIView):
-#     queryset = Article.objects.all()
-#     serializer_class = ArticleSerializer
+    def delete(self, request, *args, **kwargs):
+        pk = kwargs.get("pk", None)
+        if not pk:
+            return Response({'error': 'Метод PUT не определен'})
+        snippet = Article.objects.get(pk=pk)
+        snippet.delete()
+        return Response({"post": 'Удалить статью ' + str(pk)})
