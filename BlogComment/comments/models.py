@@ -8,3 +8,18 @@ class Article(models.Model):
 
     def __str__(self):
         return self.title
+
+
+class Author(models.Model):
+    name = models.CharField(max_length=255)
+
+    def __str__(self):
+        return self.name
+
+
+class Comment(models.Model):
+    article = models.ForeignKey(Article, on_delete=models.RESTRICT)
+    author = models.ForeignKey(Author, on_delete=models.RESTRICT)
+    content = models.TextField()
+    time_create = models.DateTimeField(auto_now_add=True)
+    time_update = models.DateTimeField(auto_now=True)

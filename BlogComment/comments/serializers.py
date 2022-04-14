@@ -1,22 +1,16 @@
 import io
 from rest_framework import serializers
-from .models import Article
+from .models import *
 from rest_framework.renderers import JSONRenderer
 from rest_framework.parsers import JSONParser
 
 
-class ArticleSerializer(serializers.Serializer):
-    title = serializers.CharField(max_length=250)
-    content = serializers.CharField()
-    time_create = serializers.DateTimeField(read_only=True)
-    comments = serializers.CharField(read_only=True)
+class ArticleSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Article
+        fields = "__all__"
 
-
-    def create(self, validated_data):
-        return Article.objects.create(**validated_data)
-
-    def update(self, instance, validated_data):
-        instance.title = validated_data.get("title", instance.title)
-        instance.content = validated_data.get("content", instance.content)
-        instance.save()
-        return instance
+class CommentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Comment
+        fields = "__all__"
