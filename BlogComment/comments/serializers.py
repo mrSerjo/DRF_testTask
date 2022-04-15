@@ -1,8 +1,7 @@
 import io
 from rest_framework import serializers
 from .models import *
-from rest_framework.renderers import JSONRenderer
-from rest_framework.parsers import JSONParser
+from rest_framework_recursive.fields import RecursiveField
 
 
 class ArticleSerializer(serializers.ModelSerializer):
@@ -12,6 +11,7 @@ class ArticleSerializer(serializers.ModelSerializer):
 
 
 class CommentSerializer(serializers.ModelSerializer):
+    #parent_id = serializers.ListField(child=RecursiveField())
     class Meta:
         model = Comment
         fields = "__all__"

@@ -23,3 +23,4 @@ class Comment(models.Model):
     content = models.TextField()
     time_create = models.DateTimeField(auto_now_add=True)
     time_update = models.DateTimeField(auto_now=True)
+    parrent_comment = models.ForeignKey('self', default=None, blank=True, null=True, on_delete=models.RESTRICT)
