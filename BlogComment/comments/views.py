@@ -15,6 +15,9 @@ class ArticleViewSet(viewsets.ModelViewSet):
         com_list = Comment.objects.all()
         return Response({'comment_list': com_list})
 
+    def get_queryset(self):
+        return Article.objects.order_by('-time_create')
+
 
 class CommentViewSet(viewsets.ModelViewSet):
     queryset = Comment.objects.all()
