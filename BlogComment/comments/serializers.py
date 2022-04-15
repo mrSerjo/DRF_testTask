@@ -11,7 +11,7 @@ class ArticleSerializer(serializers.ModelSerializer):
 
 
 class CommentSerializer(serializers.ModelSerializer):
-    #parent_id = serializers.ListField(child=RecursiveField())
+    # parent_id = serializers.ListField(child=RecursiveField())
     class Meta:
         model = Comment
         fields = "__all__"
