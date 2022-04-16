@@ -11,12 +11,16 @@ class ArticleViewSet(viewsets.ModelViewSet):
     serializer_class = ArticleSerializer
 
     @action(methods=['get'], detail=False)
-    def comment_list(self, request):
-        com_list = Comment.objects.all()
-        return Response({'comment_list': com_list})
-
     def get_queryset(self):
-        return Article.objects.order_by('-time_create')
+        articles = Article.objects.order_by('-time_create')
+
+        for article in articles:
+            comments = []
+            for comment in Comment.objects.all():
+                if comment.article.id == article.id:
+                    comments.append(comment.content)
+            article.comments = comments
+        return articles
 
 
 class CommentViewSet(viewsets.ModelViewSet):
